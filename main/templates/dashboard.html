@@ -12,16 +12,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
       <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
-          <!-- Traffic SVG Icon -->
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 64 64" fill="none" class="me-2">
             <rect width="64" height="64" rx="8" fill="#2c3e50"/>
             <path d="M28 4h8v12h-8V4zm0 22h8v12h-8V26zm0 22h8v12h-8V48z" fill="#ecf0f1"/>
             <path d="M20 4l-8 56h40L44 4H20z" fill="#34495e"/>
             <path d="M32 20v8M32 36v8M32 52v4" stroke="#ecf0f1" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-            <path
-              d="M12 2a1 1 0 0 1 1 1v1.07a7.002 7.002 0 0 1 4.928 9.428A7.002 7.002 0 0 1 13 20.93V22a1 1 0 0 1-2 0v-1.07a7.002 7.002 0 0 1-4.928-9.428A7.002 7.002 0 0 1 11 4.07V3a1 1 0 0 1 1-1zm0 4a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"
-            />
           </svg>
           Traffic Dashboard
         </a>
@@ -39,39 +34,65 @@
               <select name="wilaya" class="form-select">
                 <option value="">---</option>
                 {% for wilaya in wilayas %}
-                <option value="{{ wilaya.id }}">{{ wilaya.name }}</option>
+                  <option value="{{ wilaya.id }}" {% if request.GET.wilaya == wilaya.id|stringformat:"s" %}selected{% endif %}>
+                    {{ wilaya.name }}
+                  </option>
                 {% endfor %}
               </select>
             </div>
+
+            <div class="mb-2">
+              <label for="commune">Commune</label>
+              <select name="commune" class="form-select">
+                <option value="">---</option>
+                {% for commune in communes %}
+                  <option value="{{ commune.id }}" {% if request.GET.commune == commune.id|stringformat:"s" %}selected{% endif %}>
+                    {{ commune.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
             <div class="mb-2">
               <label for="route">Route</label>
               <select name="route" class="form-select">
                 <option value="">---</option>
                 {% for route in routes %}
-                <option value="{{ route.id_route }}">
-                  {{ route.id_route }}
-                </option>
+                    <option value="{{ route.id }}">
+                        {% if route.name %}
+                        {{ route.name }}
+                        {% else %}
+                        Route {{ route.id }}
+                        {% endif %}
+                    </option>
                 {% endfor %}
               </select>
             </div>
+
             <div class="mb-2">
               <label for="section">Section</label>
               <select name="section" class="form-select">
                 <option value="">---</option>
                 {% for section in sections %}
-                <option value="{{ section.num_section }}">{{ section }}</option>
+                  <option value="{{ section.id }}" {% if request.GET.section == section.id|stringformat:"s" %}selected{% endif %}>
+                    {{ section }}
+                  </option>
                 {% endfor %}
               </select>
             </div>
+
             <div class="mb-2">
               <label for="campagne">Campagne</label>
               <select name="campagne" class="form-select">
                 <option value="">---</option>
                 {% for campagne in campagnes %}
-                <option value="{{ campagne.id }}">{{ campagne }}</option>
+                  <option value="{{ campagne.id }}" {% if request.GET.campagne == campagne.id|stringformat:"s" %}selected{% endif %}>
+                    {{ campagne }}
+                  </option>
                 {% endfor %}
               </select>
             </div>
+
             <button type="submit" class="btn btn-primary mt-2">
               Appliquer
             </button>
@@ -82,7 +103,6 @@
         <div class="col-md-9">
           <div class="p-3">
             <h4>Image Géographique</h4>
-            {% load static %}
             <img
               src="https://ik.imagekit.io/bkshlvxqi/Screenshot%202025-06-13%20160338.png"
               class="img-fluid mb-3"
@@ -95,26 +115,32 @@
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Date</th>
+                  <th>Heure</th>
                   <th>% VL</th>
                   <th>% PL</th>
-                  <th>TJM</th>
-                  <th>Max Traffic</th>
-                  <th>Min Traffic</th>
+                  <th>TJM 7j</th>
+                  <th>TJM 5j</th>
+                  <th>VL</th>
+                  <th>PL</th>
                 </tr>
               </thead>
               <tbody>
                 {% for traffic in traffic_data %}
                 <tr>
                   <td>{{ traffic.id_id }}</td>
+                  <td>{{ traffic.date }}</td>
+                  <td>{{ traffic.heure }}</td>
                   <td>{{ traffic.percent_VL }}</td>
                   <td>{{ traffic.percent_PL }}</td>
-                  <td>{{ traffic.TJM }}</td>
-                  <td>{{ traffic.max_traffic }}</td>
-                  <td>{{ traffic.min_traffic }}</td>
+                  <td>{{ traffic.TJM_7d }}</td>
+                  <td>{{ traffic.TJM_5d }}</td>
+                  <td>{{ traffic.VL }}</td>
+                  <td>{{ traffic.PL }}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                  <td colspan="6" class="text-center">Aucune donnée</td>
+                  <td colspan="7" class="text-center">Aucune donnée</td>
                 </tr>
                 {% endfor %}
               </tbody>
