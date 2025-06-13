@@ -7,7 +7,7 @@ class Wilaya(models.Model):
     # You can add additional fields here if needed
 
     def __str__(self):
-        return f"Wilaya {self.id}"
+        return self.name
 
 
 class Commune(models.Model):
@@ -16,14 +16,15 @@ class Commune(models.Model):
     wilaya = models.ForeignKey('Wilaya', on_delete=models.CASCADE, related_name='communes')
 
     def __str__(self):
-        return f"Commune {self.id}"
+        return self.name
 
 
 class Route(models.Model):
     id_route = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, null=True)
 
     def __str__(self):
-        return f"Route {self.id_route}"
+        return self.name
 
 
 class Section(models.Model):
