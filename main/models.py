@@ -33,9 +33,10 @@ class Section(models.Model):
     lieu_f = models.CharField(max_length=255)
     route = models.ForeignKey('Route', on_delete=models.CASCADE, related_name='sections')
     commune = models.ForeignKey('Commune', on_delete=models.CASCADE, related_name='sections')
-
+    code = models.IntegerField (null=True)
+   
     def __str__(self):
-        return f"Section {self.num_section}: {self.lieu_d} -> {self.lieu_f}"
+        return f"Section {self.code}: {self.lieu_d} -> {self.lieu_f}"
 
 
 class BruteData(models.Model):
@@ -48,18 +49,18 @@ class BruteData(models.Model):
 
 class Traffic(models.Model):
     id = models.OneToOneField('BruteData', on_delete=models.CASCADE, primary_key=True, related_name='traffic')
-    percent_VL = models.FloatField()
-    TJM = models.FloatField()
+    date= models.DateField()
+    heure= models.TimeField()
+    trafic = models.FloatField()
     percent_PL = models.FloatField()
+    percent_VL = models.FloatField()
     TJM_7d = models.IntegerField()
     TJM_5d = models.IntegerField()
-    max_traffic = models.IntegerField()
-    min_traffic = models.IntegerField()
     VL = models.FloatField()
     PL = models.FloatField()
-
+    
     def __str__(self):
-        return f"Traffic for BruteData {self.id_id}"
+        return f"Trafic for BruteData {self.id_id}"
 
 
 class Campagne(models.Model):
@@ -70,3 +71,11 @@ class Campagne(models.Model):
 
     def __str__(self):
         return f"Campagne {self.annee} - T{self.trimestre}"
+    
+
+class sens(models.Model):
+    id = models.AutoField(primary_key=True)
+    sens = models.IntegerField(choices=[(1,'01'),(2,'02')])
+
+    def __str__(self):
+        return f"Sens {self.sens}"
