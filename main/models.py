@@ -42,7 +42,7 @@ class BruteData(models.Model):
 
 
 class Traffic(models.Model):
-    id = models.OneToOneField('BruteData', on_delete=models.CASCADE, primary_key=True, related_name='traffic')
+    brutedata = models.ForeignKey('BruteData', on_delete=models.CASCADE, related_name='traffic', null=True)
     date = models.DateField(null=True, blank=True)
     heure = models.TimeField(null=True, blank=True)
     trafic = models.FloatField(null=True, blank=True)
@@ -54,7 +54,7 @@ class Traffic(models.Model):
     PL = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"Traffic on {self.date} at {self.heure} (ID {self.id_id})"
+        return f"Traffic on {self.date} at {self.heure} (BruteData {self.brutedata_id})"
 
 
 class Campagne(models.Model):

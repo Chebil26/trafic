@@ -1,3 +1,4 @@
+from collections import defaultdict
 from django.shortcuts import render
 from .models import Wilaya, Commune, Route, Section, Campagne, BruteData, Traffic
 
@@ -8,7 +9,6 @@ def dashboard_view(request):
     sections = Section.objects.all()
     campagnes = Campagne.objects.all()
 
-    # Get selected filters from query parameters
     selected_wilaya = request.GET.get("wilaya")
     selected_commune = request.GET.get("commune")
     selected_route = request.GET.get("route")
@@ -30,7 +30,11 @@ def dashboard_view(request):
     if selected_campagne:
         filtered_data = filtered_data.filter(campagnes__id=selected_campagne)
 
-    traffic_data = Traffic.objects.filter(id__in=filtered_data)
+    traffic_data = Traffic.objects.filter(id__in=filtered_data).order_by("date", "heure")
+
+    grouped_traffic = defaultdict(list)
+    for traffic in traffic_data:
+        grouped_traffic[traffic.date].append(traffic)
 
     return render(request, "dashboard.html", {
         "wilayas": wilayas,
@@ -38,5 +42,5 @@ def dashboard_view(request):
         "routes": routes,
         "sections": sections,
         "campagnes": campagnes,
-        "traffic_data": traffic_data,
+        "grouped_traffic": dict(grouped_traffic),
     })
